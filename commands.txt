@@ -1,0 +1,3 @@
+docker exec -it postgres_db psql -U myuser -d mydatabase
+
+docker-compose up --build

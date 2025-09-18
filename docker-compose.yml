@@ -1,0 +1,123 @@
+version: '3.8'
+
+services:
+  db1:
+    image: postgres:15
+    container_name: postgres_db1
+    restart: always
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      # map the named volume postgres_data1 (in your host machine) to the /var/lib/postgresql/data (inside the container)
+      # postgres_data1 is also the NAME of the volume
+      - postgres_data1:/var/lib/postgresql/data
+    networks:
+      - network1
+    # ports:  # FOR DEBUGGING
+    #   - "5432:5432"
+
+  backend1:
+    build:
+      context: ./backend1/  # Specify the directory, NOT the file
+      dockerfile: Dockerfile.backend1  # Specify the Dockerfile separately
+    container_name: backend1
+    restart: always
+    depends_on:
+      - db1 # starts the DB service before starting the server 
+    environment:
+      DATABASE_NAME: mydatabase
+      DATABASE_USER: myuser
+      DATABASE_PASSWORD: mypassword
+      DATABASE_HOST: db1
+      DATABASE_PORT: 5432
+    # ports: # FOR DEBUGGING
+    #   - "8000:8000"
+    networks:
+      - network1
+      - network3
+    command: >  # This is what the container 'backend1' will execute when it starts
+      sh -c "python manage.py makemigrations &&
+            python manage.py migrate &&
+            python manage.py loaddata account/fixtures/account_billingaddress.json &&
+            python manage.py loaddata account/fixtures/account_ordermodel.json &&
+            python manage.py loaddata account/fixtures/account_stripemodel.json &&
+            python manage.py runserver 0.0.0.0:8000"
+
+  db2:
+    image: postgres:15
+    container_name: postgres_db2
+    restart: always
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres_data2:/var/lib/postgresql/data
+    networks:
+      - network2
+
+  backend2:
+    build:
+      context: ./backend2/
+      dockerfile: Dockerfile.backend2
+    container_name: backend2
+    restart: always
+    depends_on:
+      - db2
+    environment:
+      DATABASE_NAME: mydatabase
+      DATABASE_USER: myuser
+      DATABASE_PASSWORD: mypassword
+      DATABASE_HOST: db2
+      DATABASE_PORT: 5432
+    # ports: # FOR DEBUGGING
+    #   - "8001:8000"  # Avoiding port conflict with backend1
+    networks:
+      - network2
+      - network3
+    command: >
+      sh -c "python manage.py makemigrations &&
+            python manage.py migrate &&
+            python manage.py loaddata product/fixtures/initial_data.json &&
+            python manage.py runserver 0.0.0.0:8000"
+      
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend  # Specify the Dockerfile for the frontend
+    container_name: frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - network3
+    depends_on:
+      - backend2  # Ensure the backend starts before the frontend
+      - backend1
+    command: ["npm", "start", "--", "--host", "0.0.0.0"]  # Run React app
+  
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - network3
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend1
+      - backend2
+      - frontend
+
+volumes:
+  postgres_data1:
+  postgres_data2:
+
+networks:
+  network1:
+  network2:
+  network3:
