@@ -1,0 +1,28 @@
+# Build stage
+# FROM node:latest
+FROM node:18-alpine
+
+# Set work directory
+#WORKDIR /app
+
+# Copy package files
+COPY package*.json .
+
+# Install dependencies
+RUN npm install
+
+# Copy project files
+COPY src/ /src
+COPY public/ public/
+#COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Set Node environment to development
+ENV NODE_ENV=development
+
+# Start the app with hot reloading
+# CMD ["/bin/bash"]
+CMD ["npm", "start", "--", "--host", "0.0.0.0"]
+

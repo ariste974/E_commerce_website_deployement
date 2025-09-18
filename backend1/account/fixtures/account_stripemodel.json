@@ -1,0 +1,38 @@
+[
+    {
+        "model": "account.stripemodel",
+        "pk": 26,
+        "fields": {
+            "card_id": "card_1J40WaKueibZHHFgK8QECEmm",
+            "user_id": 1,
+            "card_number": "4242424242424242",
+            "exp_month": "8",
+            "exp_year": "2028",
+            "customer_id": "cus_JhPLb4Px3sW8Oe",
+            "email": "yashmarmat08@gmail.com",
+            "address_city": "New Delhi",
+            "address_country": "INDIA",
+            "address_state": "Delhi",
+            "address_zip": "111111",
+            "name_on_card": "Yash Marmat"
+        }
+    },
+    {
+        "model": "account.stripemodel",
+        "pk": 43,
+        "fields": {
+            "card_id": "card_1J5X90KueibZHHFg7gBtZ9t7",
+            "user_id": 10,
+            "card_number": "5105105105105100",
+            "exp_month": "5",
+            "exp_year": "2025",
+            "customer_id": "cus_JhOEawmNLspNTR",
+            "email": "testuser@gmail.com",
+            "address_city": null,
+            "address_country": null,
+            "address_state": null,
+            "address_zip": null,
+            "name_on_card": null
+        }
+    }
+]

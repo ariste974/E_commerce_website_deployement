@@ -1,0 +1,44 @@
+[
+    {
+        "model": "account.billingaddress",
+        "pk": 14,
+        "fields": {
+            "name": "Yash Marmat",
+            "phone_number": "9650266386",
+            "house_no": "Somewhere in New Delhi",
+            "landmark": "near park",
+            "city": "New Delhi",
+            "state": "Delhi",
+            "user_id": 1,
+            "pin_code": "110000"
+        }
+    },
+    {
+        "model": "account.billingaddress",
+        "pk": 15,
+        "fields": {
+            "name": "Yash",
+            "phone_number": "9650266386",
+            "house_no": "new house",
+            "landmark": "none",
+            "city": "california",
+            "state": "new york",
+            "user_id": 1,
+            "pin_code": "111121"
+        }
+    },
+    {
+        "model": "account.billingaddress",
+        "pk": 19,
+        "fields": {
+            "name": "testuser",
+            "phone_number": "9995555222",
+            "house_no": "somewhere on planet earth",
+            "landmark": "near restaurant",
+            "city": "unknown",
+            "state": "unknown",
+            "user_id": 10,
+            "pin_code": "110020"
+        }
+    }
+]
